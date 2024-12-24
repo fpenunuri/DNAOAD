@@ -1,4 +1,4 @@
-!ifx -I../LibDualzn128 -o e2 ejemplo2.f90 -L../LibDualzn128 -ldualzn
+!gfortran -I../LibDualzn128 -o e2 ex2.f90 -L../LibDualzn128 -ldualzn
 program main
   use precision_mod
   use dualzn_mod
