@@ -31,6 +31,8 @@ program main
   end do
 
   print*,"elapsed time (s):",t2-t1  
+  deallocate(r%f)
+  deallocate(fval%f)
 
 contains
   function ftest(x) result(fr)

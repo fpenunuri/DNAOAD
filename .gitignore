@@ -1,0 +1,8 @@
+*.mod
+*.out
+*.exe
+*.log
+*.lst
+*~
+*.swp
+.DS_Store
