@@ -144,7 +144,6 @@ contains
       deallocate(auxv(k)%f)
     end do 
     deallocate(auxv)
-
   end function d1fvector
 
   function gradient(fsd,q) result(fr)
@@ -186,5 +185,4 @@ contains
       fr(k)=x(k) + y(k)
     end do
     end function add_vecdzn
-
 end module diff_mod
