@@ -26,7 +26,8 @@ program main
   do k=0,order
      print*,fval%f(k)
   end do
-
+  deallocate(r%f)
+  deallocate(fval%f)  
 end program main
 
   
