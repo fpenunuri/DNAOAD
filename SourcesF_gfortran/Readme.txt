@@ -1,0 +1,2 @@
+The addition of dualzn numbers is implemented as an elemental operation, which allows expressions like xvec + yvec for dualzn vectors. However, the gfortran compiler produces errors when such expressions are passed directly as arguments to a function (e.g., f(x + y)). In such cases, gfortran requires the result to be stored in an intermediate variable before being passed. To avoid this issue, a dedicated function for adding dual vectors is defined in the diff_mod.f90 file.
+
