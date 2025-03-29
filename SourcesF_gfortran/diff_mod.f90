@@ -5,7 +5,7 @@ module diff_mod
   implicit none
 
   private
-  public :: d1fscalar, d2fscalar, d1fvector
+  public :: d1fscalar, d2fscalar, d1fvector, add_vecdzn
   public :: Jacobian, Hessian, gradient
 
   !Abstract interfaces for functions passed as arguments to other
