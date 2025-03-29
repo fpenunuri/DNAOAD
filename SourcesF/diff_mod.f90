@@ -89,15 +89,13 @@ contains
     procedure(fsdual) :: fsd
     complex(prec), intent(in), dimension(:) :: v, q
     complex(prec) :: fr
-    type(dualzn) :: aux
     type(dualzn) :: eps1
 
     call set_order(2)   
     eps1 = 0
     eps1%f(1) = 1
 
-    aux = fsd(q + eps1*v)
-    fr = f_part(aux,2)   
+    fr = f_part(fsd(q + eps1*v),2)   
   end function d2fscalarvv
 
   !Jacobian operator: To optimize efficiency, we include the parameter
@@ -131,14 +129,12 @@ contains
     integer, intent(in) :: n
     complex(prec), dimension(n) :: fr  
     type(dualzn) :: eps1
-    type(dualzn), dimension(n) :: aux
 
     call set_order(1)
     eps1 = 0
     eps1%f(1) = 1
 
-    aux = fvecd(q + eps1*v)
-    fr = f_part(aux,1)
+    fr = f_part(fvecd(q + eps1*v),1)
   end function d1fvector
 
   function gradient(fsd,q) result(fr)
@@ -161,13 +157,12 @@ contains
     procedure(fsdual) :: fsd
     complex(prec), intent(in), dimension(:) :: v, q
     complex(prec) :: fr  
-    type(dualzn) :: eps1, aux
+    type(dualzn) :: eps1
 
     call set_order(1)
     eps1 = 0
     eps1%f(1) = 1
 
-    aux = fsd(q + eps1*v)
-    fr = f_part(aux,1)
+    fr = f_part(fsd(q + eps1*v),1)
   end function d1fscalar
 end module diff_mod
