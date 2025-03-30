@@ -9,7 +9,7 @@ program main
   integer :: k
   real :: t1,t2
 
-  call set_order(15) !we set the order to work with
+  call set_order(5) !we set the order to work with
 
   !since a dualzn numbers is an allocatable entity, do not forget to
   !initialize it
