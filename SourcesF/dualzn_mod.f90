@@ -1823,7 +1823,6 @@ contains
     complex(prec), dimension(:), allocatable :: newx
     integer :: nn, kk, ii, LX, nx
 
-    !Initialize the dp table
     dp = 0.0
     dp(1, 1) = 1.0  
 
