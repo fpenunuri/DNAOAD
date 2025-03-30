@@ -51,5 +51,3 @@ contains
     end do
   end function ftest
 end program main
-
-
