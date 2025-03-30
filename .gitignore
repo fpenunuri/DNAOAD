@@ -1,5 +1,7 @@
 *.mod
 *.out
+*.o
+_gitmsg.saved.txt
 *.exe
 *.log
 *.lst
