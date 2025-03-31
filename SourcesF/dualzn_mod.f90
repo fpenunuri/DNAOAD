@@ -1476,7 +1476,7 @@ contains
   elemental function atan2_z(zy,zx) result (f_res)
     complex(prec), intent(in) :: zy, zx
     complex(prec) :: f_res
-    complex(prec), parameter :: ii = cmplx(0.0_prec,1.0_prec)
+    complex(prec), parameter :: ii = cmplx(0,1,prec)
     complex(prec) :: num, den, divnd, t1, t2
     real(prec) :: x1, x2, y1, y2
     complex(prec) :: x1c, x2c, y1c, y2c
