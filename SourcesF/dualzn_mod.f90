@@ -49,20 +49,20 @@ module dualzn_mod
 
   !functions to change from integer, real and complex numbers to dual
   interface itodn
-     module procedure :: i4todn
-     module procedure :: i8todn
+     module procedure i4todn
+     module procedure i8todn
   end interface itodn
 
   interface realtodn
-     module procedure :: r4todn
-     module procedure :: r8todn
-     module procedure :: r16todn
+     module procedure r4todn
+     module procedure r8todn
+     module procedure r16todn
   end interface realtodn
 
   interface cmplxtodn
-     module procedure :: c4todn
-     module procedure :: c8todn
-     module procedure :: c16todn
+     module procedure c4todn
+     module procedure c8todn
+     module procedure c16todn
   end interface cmplxtodn
   !---------------------------------------------------------------------
 
@@ -141,69 +141,69 @@ module dualzn_mod
   end interface conjg
 
   interface atan2
-     module procedure :: atan2d_
+     module procedure atan2d_
   end interface atan2
 
   interface tanh
-     module procedure :: tanhd
+     module procedure tanhd
   end interface tanh
 
   interface cosh
-     module procedure :: coshd
+     module procedure coshd
   end interface cosh
 
   interface sinh
-     module procedure :: sinhd
+     module procedure sinhd
   end interface sinh
 
   interface atanh
-     module procedure :: atanhd
+     module procedure atanhd
   end interface atanh
 
   interface acosh
-     module procedure :: acoshd
+     module procedure acoshd
   end interface acosh
 
   interface asinh
-     module procedure :: asinhd
+     module procedure asinhd
   end interface asinh
 
   interface atan
-     module procedure :: atand_
+     module procedure atand_
      ! Fortran 2008 standard for 2 argument atan:
-     module procedure :: atan2d_
+     module procedure atan2d_
   end interface atan
 
   interface acos
-     module procedure :: acosd_
+     module procedure acosd_
   end interface acos
 
   interface asin
-     module procedure :: asind_
+     module procedure asind_
   end interface asin
 
   interface log
-     module procedure :: logd
+     module procedure logd
   end interface log
 
   interface exp
-     module procedure :: expd
+     module procedure expd
   end interface exp
 
   interface sqrt
-     module procedure :: sqrtd
+     module procedure sqrtd
   end interface sqrt
 
   interface sin
-     module procedure :: sind_
+     module procedure sind_
   end interface sin
 
   interface cos
-     module procedure :: cosd_
+     module procedure cosd_
   end interface cos
 
   interface tan
-     module procedure :: tand_
+     module procedure tand_
   end interface tan
   !---------------------------------------------------------------------
 
