@@ -141,7 +141,7 @@ module dualzn_mod
   end interface conjg
 
   interface atan2
-     module procedure :: atan2d
+     module procedure :: atan2d_
   end interface atan2
 
   interface tanh
@@ -169,17 +169,17 @@ module dualzn_mod
   end interface asinh
 
   interface atan
-     module procedure :: atand
+     module procedure :: atand_
      ! Fortran 2008 standard for 2 argument atan:
-     module procedure :: atan2d
+     module procedure :: atan2d_
   end interface atan
 
   interface acos
-     module procedure :: acosd
+     module procedure :: acosd_
   end interface acos
 
   interface asin
-     module procedure :: asind
+     module procedure :: asind_
   end interface asin
 
   interface log
@@ -195,15 +195,15 @@ module dualzn_mod
   end interface sqrt
 
   interface sin
-     module procedure :: sind
+     module procedure :: sind_
   end interface sin
 
   interface cos
-     module procedure :: cosd
+     module procedure :: cosd_
   end interface cos
 
   interface tan
-     module procedure :: tand
+     module procedure :: tand_
   end interface tan
   !---------------------------------------------------------------------
 
@@ -1214,7 +1214,7 @@ contains
   !---------------------------------------------------------------------
 
   !acos function
-  elemental function acosd(g) result(fr)
+  elemental function acosd_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1224,7 +1224,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(acoszdn,g,k)
     end do
-  end function acosd
+  end function acosd_
 
   pure function acoszdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1254,7 +1254,7 @@ contains
   !---------------------------------------------------------------------
 
   !asin function
-  elemental function asind(g) result(fr)
+  elemental function asind_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1264,7 +1264,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(asinzdn,g,k)
     end do
-  end function asind
+  end function asind_
 
   pure function asinzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1294,7 +1294,7 @@ contains
   !---------------------------------------------------------------------
 
   !atan function
-  elemental function atand(g) result(fr)
+  elemental function atand_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1304,7 +1304,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(atanzdn,g,k)
     end do
-  end function atand
+  end function atand_
 
   pure function atanzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1463,7 +1463,7 @@ contains
   !---------------------------------------------------------------------
 
   !atan2d function
-  elemental function atan2d(y,x) result(fr)
+  elemental function atan2d_(y,x) result(fr)
     type(dualzn), intent(in) :: y, x
     type(dualzn) :: fr
     complex(prec) :: x0, y0
@@ -1472,7 +1472,7 @@ contains
     x0 = x%f(0)
     y0 = y%f(0)
     fr%f(0) = atan2_z(y0,x0)
-  end function atan2d
+  end function atan2d_
 
   !Atan2 for complex arguments
   elemental function atan2_z(zy,zx) result (f_res)
@@ -1730,7 +1730,7 @@ contains
   !---------------------------------------------------------------------
 
   !sin function
-  elemental function sind(g) result(fr)
+  elemental function sind_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1740,7 +1740,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(sinzdn,g,k)
     end do
-  end function sind
+  end function sind_
 
   pure function sinzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1756,7 +1756,7 @@ contains
   !---------------------------------------------------------------------
 
   !cos function
-  elemental function cosd(g) result(fr)
+  elemental function cosd_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1766,7 +1766,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(coszdn,g,k)
     end do
-  end function cosd
+  end function cosd_
 
   pure function coszdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1782,12 +1782,12 @@ contains
   !---------------------------------------------------------------------
 
   !tan function
-  elemental function tand(g) result(fr)
+  elemental function tand_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
 
-    fr = sind(g)*inv(cosd(g))
-  end function tand
+    fr = sind_(g)*inv(cosd_(g))
+  end function tand_
   !---------------------------------------------------------------------
 
   !sqrt function
