@@ -1315,12 +1315,16 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = atan(z)
+
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/(1.0_prec + z**2)
+    if (order == 1) return
 
     den = 1.0_prec + z*z
 
     call initialize_dualzn(auxdn)
-    auxdn%f(0) = 1.0_prec + z*z
+    auxdn%f(0) = den
     auxdn%f(1) = 2.0_prec * z
     auxdn%f(2) = 2.0_prec
 
@@ -1443,12 +1447,15 @@ contains
     allocate(fr%f(0:order))
     fr%f(0) = atanh(z)
 
+    if (order == 0) return
+
     !do not 'simplify' they are complex
     den = 1.0_prec - z*z
     fr%f(1) = 1.0_prec/den
+    if (order == 1) return
 
     call initialize_dualzn(auxdn)
-    auxdn%f(0) = 1.0_prec - z*z
+    auxdn%f(0) = den
     auxdn%f(1) = -2.0_prec * z
     auxdn%f(2) = -2.0_prec
 
