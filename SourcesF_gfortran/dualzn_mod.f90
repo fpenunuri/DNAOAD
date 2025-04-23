@@ -49,20 +49,20 @@ module dualzn_mod
 
   !functions to change from integer, real and complex numbers to dual
   interface itodn
-     module procedure :: i4todn
-     module procedure :: i8todn
+     module procedure i4todn
+     module procedure i8todn
   end interface itodn
 
   interface realtodn
-     module procedure :: r4todn
-     module procedure :: r8todn
-     module procedure :: r16todn
+     module procedure r4todn
+     module procedure r8todn
+     module procedure r16todn
   end interface realtodn
 
   interface cmplxtodn
-     module procedure :: c4todn
-     module procedure :: c8todn
-     module procedure :: c16todn
+     module procedure c4todn
+     module procedure c8todn
+     module procedure c16todn
   end interface cmplxtodn
   !---------------------------------------------------------------------
 
@@ -141,69 +141,69 @@ module dualzn_mod
   end interface conjg
 
   interface atan2
-     module procedure :: atan2d
+     module procedure atan2d_
   end interface atan2
 
   interface tanh
-     module procedure :: tanhd
+     module procedure tanhd
   end interface tanh
 
   interface cosh
-     module procedure :: coshd
+     module procedure coshd
   end interface cosh
 
   interface sinh
-     module procedure :: sinhd
+     module procedure sinhd
   end interface sinh
 
   interface atanh
-     module procedure :: atanhd
+     module procedure atanhd
   end interface atanh
 
   interface acosh
-     module procedure :: acoshd
+     module procedure acoshd
   end interface acosh
 
   interface asinh
-     module procedure :: asinhd
+     module procedure asinhd
   end interface asinh
 
   interface atan
-     module procedure :: atand
+     module procedure atand_
      ! Fortran 2008 standard for 2 argument atan:
-     module procedure :: atan2d
+     module procedure atan2d_
   end interface atan
 
   interface acos
-     module procedure :: acosd
+     module procedure acosd_
   end interface acos
 
   interface asin
-     module procedure :: asind
+     module procedure asind_
   end interface asin
 
   interface log
-     module procedure :: logd
+     module procedure logd
   end interface log
 
   interface exp
-     module procedure :: expd
+     module procedure expd
   end interface exp
 
   interface sqrt
-     module procedure :: sqrtd
+     module procedure sqrtd
   end interface sqrt
 
   interface sin
-     module procedure :: sind
+     module procedure sind_
   end interface sin
 
   interface cos
-     module procedure :: cosd
+     module procedure cosd_
   end interface cos
 
   interface tan
-     module procedure :: tand
+     module procedure tand_
   end interface tan
   !---------------------------------------------------------------------
 
@@ -1214,7 +1214,7 @@ contains
   !---------------------------------------------------------------------
 
   !acos function
-  elemental function acosd(g) result(fr)
+  elemental function acosd_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1224,7 +1224,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(acoszdn,g,k)
     end do
-  end function acosd
+  end function acosd_
 
   pure function acoszdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1235,7 +1235,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = acos(z)
+    if (order == 0) return
+
     fr%f(1) = -1.0_prec/sqrt(1.0_prec - z**2)
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
@@ -1254,7 +1257,7 @@ contains
   !---------------------------------------------------------------------
 
   !asin function
-  elemental function asind(g) result(fr)
+  elemental function asind_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1264,7 +1267,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(asinzdn,g,k)
     end do
-  end function asind
+  end function asind_
 
   pure function asinzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1275,7 +1278,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = asin(z)
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/sqrt(1.0_prec - z**2)
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
@@ -1294,7 +1300,7 @@ contains
   !---------------------------------------------------------------------
 
   !atan function
-  elemental function atand(g) result(fr)
+  elemental function atand_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1304,7 +1310,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(atanzdn,g,k)
     end do
-  end function atand
+  end function atand_
 
   pure function atanzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1315,12 +1321,16 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = atan(z)
+
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/(1.0_prec + z**2)
+    if (order == 1) return
 
     den = 1.0_prec + z*z
 
     call initialize_dualzn(auxdn)
-    auxdn%f(0) = 1.0_prec + z*z
+    auxdn%f(0) = den
     auxdn%f(1) = 2.0_prec * z
     auxdn%f(2) = 2.0_prec
 
@@ -1356,7 +1366,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = asinh(z)
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/sqrt(1.0_prec + z**2)
+    if (order == 1) return
 
     den = sqrt(1.0_prec + z*z)
 
@@ -1398,11 +1411,12 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = acosh(z)
+    if (order == 0) return
 
     !do not 'simplify' they are complex
     den = sqrt(z - 1.0_prec) * sqrt(1.0_prec + z)
     fr%f(1) = 1.0_prec/den
-
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
@@ -1443,12 +1457,15 @@ contains
     allocate(fr%f(0:order))
     fr%f(0) = atanh(z)
 
+    if (order == 0) return
+
     !do not 'simplify' they are complex
     den = 1.0_prec - z*z
     fr%f(1) = 1.0_prec/den
+    if (order == 1) return
 
     call initialize_dualzn(auxdn)
-    auxdn%f(0) = 1.0_prec - z*z
+    auxdn%f(0) = den
     auxdn%f(1) = -2.0_prec * z
     auxdn%f(2) = -2.0_prec
 
@@ -1463,7 +1480,7 @@ contains
   !---------------------------------------------------------------------
 
   !atan2d function
-  elemental function atan2d(y,x) result(fr)
+  elemental function atan2d_(y,x) result(fr)
     type(dualzn), intent(in) :: y, x
     type(dualzn) :: fr
     complex(prec) :: x0, y0
@@ -1472,7 +1489,7 @@ contains
     x0 = x%f(0)
     y0 = y%f(0)
     fr%f(0) = atan2_z(y0,x0)
-  end function atan2d
+  end function atan2d_
 
   !Atan2 for complex arguments
   elemental function atan2_z(zy,zx) result (f_res)
@@ -1730,7 +1747,7 @@ contains
   !---------------------------------------------------------------------
 
   !sin function
-  elemental function sind(g) result(fr)
+  elemental function sind_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1740,7 +1757,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(sinzdn,g,k)
     end do
-  end function sind
+  end function sind_
 
   pure function sinzdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1756,7 +1773,7 @@ contains
   !---------------------------------------------------------------------
 
   !cos function
-  elemental function cosd(g) result(fr)
+  elemental function cosd_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
     integer :: k
@@ -1766,7 +1783,7 @@ contains
     do k=0,order
        fr%f(k) = Dnd(coszdn,g,k)
     end do
-  end function cosd
+  end function cosd_
 
   pure function coszdn(z) result(fr)
     complex(prec), intent(in) :: z
@@ -1782,12 +1799,12 @@ contains
   !---------------------------------------------------------------------
 
   !tan function
-  elemental function tand(g) result(fr)
+  elemental function tand_(g) result(fr)
     type(dualzn), intent(in) :: g
     type(dualzn) :: fr
 
-    fr = sind(g)*inv(cosd(g))
-  end function tand
+    fr = sind_(g)*inv(cosd_(g))
+  end function tand_
   !---------------------------------------------------------------------
 
   !sqrt function
@@ -1825,7 +1842,6 @@ contains
     complex(prec), dimension(:), allocatable :: newx
     integer :: nn, kk, ii, LX, nx
 
-    !Initialize the dp table
     dp = 0.0
     dp(1, 1) = 1.0  
 
