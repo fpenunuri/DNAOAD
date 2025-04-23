@@ -1235,7 +1235,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = acos(z)
+    if (order == 0) return
+
     fr%f(1) = -1.0_prec/sqrt(1.0_prec - z**2)
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
@@ -1275,7 +1278,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = asin(z)
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/sqrt(1.0_prec - z**2)
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
@@ -1356,7 +1362,10 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = asinh(z)
+    if (order == 0) return
+
     fr%f(1) = 1.0_prec/sqrt(1.0_prec + z**2)
+    if (order == 1) return
 
     den = sqrt(1.0_prec + z*z)
 
@@ -1398,11 +1407,12 @@ contains
 
     allocate(fr%f(0:order))
     fr%f(0) = acosh(z)
+    if (order == 0) return
 
     !do not 'simplify' they are complex
     den = sqrt(z - 1.0_prec) * sqrt(1.0_prec + z)
     fr%f(1) = 1.0_prec/den
-
+    if (order == 1) return
 
     call initialize_dualzn(zdn)
     zdn%f(0) = z
