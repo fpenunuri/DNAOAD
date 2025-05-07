@@ -22,7 +22,7 @@ module dualzn_mod
      complex(prec), allocatable, dimension(:) :: f
   end type dualzn
 
-  public :: set_order, initialize_dualzn, f_part
+  public :: set_order, get_order, initialize_dualzn, f_part
   public :: binomial, BellY, Dnd
   public :: itodn, realtodn, cmplxtodn, Mset_fpart
 
@@ -230,6 +230,12 @@ contains
     end if
     order = new_order
   end subroutine set_order
+
+  !check the order for dual numbers
+  pure function get_order()
+    integer :: get_order
+    get_order = order
+  end function get_order
   !---------------------------------------------------------------------
 
   !Assignment, equal operator
