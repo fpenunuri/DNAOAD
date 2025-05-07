@@ -232,9 +232,9 @@ contains
   end subroutine set_order
 
   !check the order for dual numbers
-  pure function get_order()
-    integer :: get_order
-    get_order = order
+  pure function get_order() result(order_value)
+    integer :: order_value
+    order_value = order
   end function get_order
   !---------------------------------------------------------------------
 
