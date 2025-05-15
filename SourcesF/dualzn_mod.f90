@@ -13,7 +13,7 @@ module dualzn_mod
   !---------------------------------------------------------------------
   !Some Module variables
   !Default order, can be modified with set_order
-  integer, public  :: order = 1
+  integer, protected :: order = 1
   real(prec), public, parameter :: Pi = 4.0_prec*atan(1.0_prec)
   !---------------------------------------------------------------------
 
