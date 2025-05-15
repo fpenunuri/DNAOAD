@@ -8,9 +8,12 @@ program main
 
   complex(prec) :: z0
   type(dualzn) :: r, fval
-  integer :: k
+  integer :: k, local_order
+  
 
   call set_order(5) !before anything we set the 'order' to work with
+
+  local_order = get_order()
   
   z0 = (1.1_prec,2.2_prec)
   r = 0 !we initialize the dual number to 0
@@ -25,7 +28,7 @@ program main
   !writing the derivatives, from the 0th derivative up to the
   !order-th derivative.
   print*,"derivatives"
-  do k=0,order
+  do k=0, local_order
      print*,fval%f(k)
   end do
 

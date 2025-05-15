@@ -8,10 +8,11 @@ program main
 
   complex(prec) :: z0
   type(dualzn) :: r, fval
-  integer :: k
+  integer :: k, local_order
   real :: t1,t2
 
   call set_order(5) !we set the order to work with
+  local_order = get_order()
 
   !since a dualzn numbers is an allocatable entity, do not forget to
   !initialize it
@@ -27,7 +28,7 @@ program main
   !Computing the derivatives, from the 0th derivative up to the
   !order-th derivative.
   print*,"derivatives"
-  do k=0,order
+  do k=0,local_order
      write(*,"(i0,a,f0.1,a,e17.10)") k,"-th derivative at x = ", &
           real(r%f(0)),":",real(fval%f(k))
   end do
