@@ -13,7 +13,7 @@ module dualzn_mod
   !---------------------------------------------------------------------
   !Some Module variables
   !Default order, can be modified with set_order
-  integer, public  :: order = 1
+  integer, protected :: order = 1
   real(prec), public, parameter :: Pi = 4.0_prec*atan(1.0_prec)
   !---------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ module dualzn_mod
      complex(prec), allocatable, dimension(:) :: f
   end type dualzn
 
-  public :: set_order, initialize_dualzn, f_part
+  public :: set_order, get_order, initialize_dualzn, f_part
   public :: binomial, BellY, Dnd
   public :: itodn, realtodn, cmplxtodn, Mset_fpart
 
@@ -230,6 +230,12 @@ contains
     end if
     order = new_order
   end subroutine set_order
+
+  !check the order for dual numbers
+  pure function get_order() result(order_value)
+    integer :: order_value
+    order_value = order
+  end function get_order
   !---------------------------------------------------------------------
 
   !Assignment, equal operator

@@ -90,12 +90,15 @@ contains
     complex(prec), intent(in), dimension(:) :: v, q
     complex(prec) :: fr
     type(dualzn) :: eps1
+    integer :: original_order
 
-    call set_order(2)   
+    original_order = get_order()
+    call set_order(2)
     eps1 = 0
     eps1%f(1) = 1
 
-    fr = f_part(fsd(add_vecdzn(cmplxtodn(q),eps1*v)),2)  
+    fr = f_part(fsd(add_vecdzn(cmplxtodn(q),eps1*v)),2)
+    call set_order(original_order)
   end function d2fscalarvv
 
   !Jacobian operator: To optimize efficiency, we include the parameter
@@ -131,7 +134,9 @@ contains
     type(dualzn) :: eps1
     type(dualzn), allocatable, dimension(:) ::  auxv
     integer :: k
+    integer :: original_order
 
+    original_order = get_order()
     call set_order(1)
     eps1 = 0
     eps1%f(1) = 1
@@ -144,6 +149,7 @@ contains
       deallocate(auxv(k)%f)
     end do 
     deallocate(auxv)
+    call set_order(original_order)
   end function d1fvector
 
   function gradient(fsd,q) result(fr)
@@ -167,12 +173,15 @@ contains
     complex(prec), intent(in), dimension(:) :: v, q
     complex(prec) :: fr  
     type(dualzn) :: eps1
+    integer :: original_order
 
+    original_order = get_order()
     call set_order(1)
     eps1 = 0
     eps1%f(1) = 1
 
-    fr = f_part(fsd(add_vecdzn(cmplxtodn(q),eps1*v)),1)  
+    fr = f_part(fsd(add_vecdzn(cmplxtodn(q),eps1*v)),1)
+    call set_order(original_order)
   end function d1fscalar
 
   function add_vecdzn(x,y) result(fr)
