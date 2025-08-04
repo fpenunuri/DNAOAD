@@ -6,7 +6,6 @@ program main
   use dualzn_mod
   implicit none
 
-  complex(prec) :: z0
   type(dualzn) :: r, fval
   integer :: k, local_order
   real :: t1,t2
