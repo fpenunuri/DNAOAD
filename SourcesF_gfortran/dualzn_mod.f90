@@ -24,7 +24,9 @@ module dualzn_mod
 
   public :: set_order, get_order, initialize_dualzn, f_part
   public :: binomial, BellY, Dnd
-  public :: itodn, realtodn, cmplxtodn, Mset_fpart
+  public :: Mset_fpart
+  public :: xto_dzn
+  public :: itodn, realtodn, cmplxtodn
 
   public :: inv, sin, cos, tan, exp, log, sqrt, asin, acos, atan, asinh
   public :: acosh, atanh, sinh, cosh, tanh, absx, atan2
@@ -48,6 +50,7 @@ module dualzn_mod
   !---------------------------------------------------------------------
 
   !functions to change from integer, real and complex numbers to dual
+  ! can use xto_dzn instead
   interface itodn
      module procedure i4todn
      module procedure i8todn
@@ -350,6 +353,41 @@ contains
     f_res = .not.(lhs == rhs)
   end function noteq_dzn
   !---------------------------------------------------------------------
+
+  ! Converts a value (integer, real, complex, dualzn) `X` to a dualzn
+  ! number.
+  elemental function xto_dzn(X) result(fr)
+    class(*), intent(in) :: X
+    type(dualzn) :: fr
+
+    call initialize_dualzn(fr)
+
+    select type (X)
+    type is (dualzn)
+       fr = X
+       return
+    type is (complex(kind=real128))
+       fr%f(0) = cmplx(X, kind=prec)
+    type is (complex(kind=real64))
+       fr%f(0) = cmplx(X, kind=prec)
+    type is (complex(kind=real32))
+       fr%f(0) = cmplx(X, kind=prec)
+    type is (real(kind=real128))
+       fr%f(0) = cmplx(X, 0.0_prec, kind=prec)
+    type is (real(kind=real64))
+       fr%f(0) = cmplx(X, 0.0_prec, kind=prec)
+    type is (real(kind=real32))
+       fr%f(0) = cmplx(X, 0.0_prec, kind=prec)
+    type is (integer(kind=int64))
+       fr%f(0) = cmplx(X, 0.0_prec, kind=prec)
+    type is (integer(kind=int32))
+       fr%f(0) = cmplx(X, 0.0_prec, kind=prec)
+    class default
+       continue
+    end select
+  end function xto_dzn
+
+  !the beolow functions are private, use xto_dzn instead  
   elemental function c16todn(x) result(fr)
     complex(real128), intent(in) :: x
     type(dualzn) :: fr
@@ -585,80 +623,38 @@ contains
   !---------------------------------------------------------------------
 
   !dual**class
-  elemental function powerdX(B,X) result(fr)
-    class(*), intent(in) :: X
+      elemental function powerdX(B, X) result(fr)
+    class(*),   intent(in) :: X  
     type(dualzn), intent(in) :: B
     type(dualzn) :: fr
-    type(dualzn) :: Xd
-    real(real64) :: Xr8
 
     select type (X)
     type is (dualzn)
-       Xd = X
-       fr = powerd(B,Xd)
-
-    type is(complex(kind=real128))
-       Xd = cmplxtodn(X)
-       fr = powerd(B,Xd)
-
-    type is (complex(kind=real64))
-       Xd =cmplxtodn(X)
-       fr = powerd(B,Xd)
-
-    type is (complex(kind=real32))
-       Xd =cmplxtodn(X)
-       fr = powerd(B,Xd)
-
-    type is (real(kind=real128))
-       fr = power_dr16(B,X)
-
-    type is (real(kind=real64))
-       fr = power_dr8(B,X)
-
-    type is (real(kind=real32))
-       Xr8 = X
-       fr = power_dr8(B,Xr8)
-
+       fr = powerd(B, X)
     type is (integer(kind=int64))
-       fr = power_dint8(B,X)
-
+       fr = power_dint8(B, X)
     type is (integer(kind=int32))
-       fr = power_dint(B,X)
+       fr = power_dint(B, X)
+    class default
+       fr = powerd(B, xto_dzn(X))
     end select
-
   end function powerdX
   !---------------------------------------------------------------------
 
-  !class**dual
+  !class**dual (X**B)
   elemental function powerXd(XX,BB) result(fr)
     class(*), intent(in) :: XX
     type(dualzn), intent(in) :: BB
     type(dualzn) :: fr
-    type(dualzn) :: Xd
 
     select type (XX)
     type is (dualzn)
-       Xd = XX
-    type is(complex(kind=real128))
-       Xd = cmplxtodn(XX)
-    type is (complex(kind=real64))
-       Xd =cmplxtodn(XX)
-    type is (complex(kind=real32))
-       Xd =cmplxtodn(XX)
-    type is (real(kind=real128))
-       Xd = realtodn(XX)
-    type is (real(kind=real64))
-       Xd = realtodn(XX)
-    type is (real(kind=real32))
-       Xd = realtodn(XX)   
-    type is (integer(kind=int64))
-       Xd = itodn(XX)
-    type is (integer(kind=int32))
-       Xd = itodn(XX)
+       fr = powerd(XX, BB)
+    class default
+       fr = powerd(xto_dzn(XX),BB)
     end select
-    fr = powerd(Xd, BB)
   end function powerXd
-  !---------------------------------------------------------------------
+!---------------------------------------------------------------------
 
   function MtimesdX(A,X) result(fr)
     type(dualzn), intent(in), dimension(:,:) :: A
@@ -821,37 +817,6 @@ contains
   end function Mtimesd
   !...................
 
-  !Dual matrix multiplication following the Leibniz rule.
-  !This can be useful for implementing dual matrix multiplication 
-  !using the BLAS or MKL libraries. (Not implemented in this module).
-  function Mtimesd_LbnzRule(A,B) result(fr)
-    type(dualzn), intent(in), dimension(:,:) :: A, B
-    type(dualzn), dimension(size(A,1),size(B,2)) :: fr
-    integer :: k
-    complex(prec), dimension(size(A,1),size(B,2)) :: ABk
-
-    call initialize_dualzn(fr)
-    do k=0,order
-       ABk = Mtimesdzn(A,B,k)
-       call Mset_fpart(k,ABk,fr)
-    end do
-  end function Mtimesd_LbnzRule
-
-  function Mtimesdzn(A,B,k) result(fr)
-    type(dualzn), intent(in), dimension(:,:) :: A, B
-    integer, intent(in) :: k     
-    complex(prec), dimension(size(A,1),size(B,2)) :: fr
-    complex(prec), dimension(size(A,1),size(A,2)) :: Aizaux
-    complex(prec), dimension(size(B,1),size(B,2)) :: Bkmizaux
-    integer :: i
-
-    fr=0.0_prec
-    do i=0,k
-       Aizaux = f_part(A,i)
-       Bkmizaux = f_part(B,k-i)
-       fr=fr+binomial(k,i)*matmul(Aizaux,Bkmizaux)
-    end do
-  end function Mtimesdzn
 
   !to set the dual-k component to cm in matrix A
   subroutine Mset_fpart(k,cm,A)
@@ -960,51 +925,9 @@ contains
   end function power_dint8
   !---------------------------------------------------------------------
 
-  !A**x16
-  elemental function power_dr16 (A,x16) result(fr)
-    type(dualzn), intent(in) :: A
-    real(real128), intent(in) :: x16
-    type(dualzn) :: fr
-    type(dualzn) :: x16dn
-    integer :: iaux
-    logical :: x16IQ
-
-    iaux = int(x16)
-
-    x16IQ = real(iaux,kind=real128) == x16
-
-    if(x16IQ) then
-       fr = A**iaux
-    else
-       x16dn = realtodn(x16)
-       fr = A**x16dn
-    end if
-  end function power_dr16
-
-  !A**x8
-  elemental function power_dr8 (A,x8) result(fr)
-    type(dualzn), intent(in) :: A
-    real(real64), intent(in) :: x8
-    type(dualzn) :: fr
-    type(dualzn) :: x8dn
-    integer :: iaux
-    logical :: x8IQ
-
-    iaux = int(x8)
-
-    x8IQ = real(iaux,kind=real64) == x8 
-
-    if(x8IQ) then
-       fr = A**iaux
-    else
-       x8dn = realtodn(x8)
-       fr = A**x8dn
-    end if
-  end function power_dr8
-  !---------------------------------------------------------------------
 
   !chain rule, D^n (f(g))
-  pure function Dnd(fc,gdual,n) result(dnfc)
+ recursive pure function Dnd(fc,gdual,n) result(dnfc)
     procedure(funzdual) :: fc
     type(dualzn), intent(in) :: gdual
     integer, intent(in) :: n
