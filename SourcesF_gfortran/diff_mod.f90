@@ -32,7 +32,7 @@ module diff_mod
 
   interface d2fscalar
      module procedure d2fscalarvv
-     module procedure d2fscalaruv       
+     module procedure d2fscalaruv
   end interface d2fscalar
   !---------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ contains
   !Hessian operator
   function Hessian(fsd,qcmplx) result(Hmat)
     procedure(fsdual) :: fsd
-    complex(prec), intent(in), dimension(:) :: qcmplx    
+    complex(prec), intent(in), dimension(:) :: qcmplx
     complex(prec), dimension(size(qcmplx),size(qcmplx)) :: Hmat
 
     complex(prec), dimension(size(qcmplx)) :: ei, ej
@@ -61,7 +61,8 @@ contains
        do j=i+1,m
           ej = 0
           ej(j) = 1
-          Hmat(i,j) = d2fscalaruv(fsd,ei,ej,qcmplx)
+          Hmat(i,j) = 0.5_prec * (d2fscalar(fsd,ei + ej,qcmplx) - Hmat(i,i) &
+                      Hmat(j,j))
           Hmat(j,i) = Hmat(i,j)
        end do
     end do
@@ -115,7 +116,7 @@ contains
 
     do i = 1,size(qcmplx)
        ei = 0
-       ei(i) = 1      
+       ei(i) = 1
        TrpJmat(i,:) = d1fvector(fvecd,ei,qcmplx,n)
     end do
 
@@ -130,7 +131,7 @@ contains
     procedure(fvecdual) :: fvecd
     complex(prec), intent(in), dimension(:) :: v, q
     integer, intent(in) :: n
-    complex(prec), dimension(n) :: fr  
+    complex(prec), dimension(n) :: fr
     type(dualzn) :: eps1
     type(dualzn), allocatable, dimension(:) ::  auxv
     integer :: k
@@ -145,9 +146,9 @@ contains
     auxv = fvecd(add_vecdzn(cmplxtodn(q),eps1*v))
     fr = f_part(auxv,1)
 
-    do k=1,n 
+    do k=1,n
       deallocate(auxv(k)%f)
-    end do 
+    end do
     deallocate(auxv)
     call set_order(original_order)
   end function d1fvector
@@ -161,7 +162,7 @@ contains
 
     do i = 1,size(q)
        ei = 0
-       ei(i) = 1      
+       ei(i) = 1
        fr(i) = d1fscalar(fsd,ei,q)
     end do
   end function gradient
@@ -171,7 +172,7 @@ contains
   function d1fscalar(fsd,v,q) result(fr)
     procedure(fsdual) :: fsd
     complex(prec), intent(in), dimension(:) :: v, q
-    complex(prec) :: fr  
+    complex(prec) :: fr
     type(dualzn) :: eps1
     integer :: original_order
 
@@ -187,9 +188,9 @@ contains
   function add_vecdzn(x,y) result(fr)
     type(dualzn), intent(in), dimension(:) :: x, y
     type(dualzn), dimension(size(x)) :: fr
-    
+
     integer :: k
-    
+
     do k=1, size(x)
       fr(k)=x(k) + y(k)
     end do
