@@ -4,7 +4,7 @@
 
 ## 🧪 Building & Running Examples
 
-To build and run the examples we recommend installing the fortran package manger ([fpm][https://fpm.fortran-lang.org/index.html]) first. Then the examples can by executed by simply running, for example
+To build and run the examples we recommend installing the fortran package manger ([fpm](https://fpm.fortran-lang.org/index.html)) first. Then the examples can by executed by simply running, for example
 
 ```bash
 fpm run --example ex1
