@@ -2,37 +2,18 @@
 
 **DNAOAD** (Dual Number Arbitrary Order Automatic Differentiation) is a Fortran implementation of dual numbers for arbitrary order automatic differentiation.
 
-## 🧪 Running Examples
+## 🧪 Building & Running Examples
 
-To run the examples, navigate to the `examples` directory and use a terminal. For example:
+To build and run the examples we recommend installing the fortran package manger ([fpm][https://fpm.fortran-lang.org/index.html]) first. Then the examples can by executed by simply running, for example
 
-```sh
-sh create_exec.sh ex1.f90
+```bash
+fpm run --example ex1
 ```
 
-On **Windows**, use:
-
-```bat
-create_exec.bat ex1.f90
-```
-
-> **Note:** Alternatively (and this is the recommended method), you can manually compile and run the source files.
-
-## ⚙️ Manual Compilation
-
-The examples in the `SourcesF` folder can be compiled directly using the **Intel Fortran** compiler:
-
-```sh
-ifx ex3.f90
-```
-
-If you're using **gfortran**, use the `SourcesF_gfortran` folder instead.
+from the command line.
 
 ## 📖 More Information
 
-For further details, see **Section 4** of the article:
+For further details, see the article:
 
 📎 [https://doi.org/10.48550/arXiv.2501.04159](https://doi.org/10.48550/arXiv.2501.04159)
-
-
-
