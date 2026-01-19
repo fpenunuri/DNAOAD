@@ -38,33 +38,37 @@ module diff_mod
 
 contains
   !Hessian operator
-  function Hessian(fsd,qcmplx) result(Hmat)
+    function Hessian(fsd,qcmplx) result(Hmat)
     procedure(fsdual) :: fsd
-    complex(prec), intent(in), dimension(:) :: qcmplx
+    complex(prec), intent(in), dimension(:) :: qcmplx    
     complex(prec), dimension(size(qcmplx),size(qcmplx)) :: Hmat
-
     complex(prec), dimension(size(qcmplx)) :: ei, ej
+    complex(prec) :: hij
     integer :: i,j,m
-
+    
     m = size(qcmplx)
-
-    Hmat = 0
-    do i=1,m
-       ei = 0
-       ei(i) = 1
-       Hmat(i,i) = d2fscalarvv(fsd,ei,qcmplx)
+    !diagonal components
+    ei = 0.0_prec
+    do i = 1, m
+       ei(i) = 1.0_prec
+       Hmat(i,i) = d2fscalar(fsd,ei,qcmplx)
+       ei(i) = 0.0_prec 
     end do
-
+    
+    !off-diagonal components
     do i=1, m
-       ei = 0
-       ei(i) = 1
-       do j=i+1,m
-          ej = 0
-          ej(j) = 1
-          Hmat(i,j) = 0.5_prec * (d2fscalar(fsd,ei + ej,qcmplx) - Hmat(i,i) &
-                      Hmat(j,j))
-          Hmat(j,i) = Hmat(i,j)
+       ei(i) = 1.0_prec
+       ej = 0.0_prec
+       do j = i+1, m
+          ej(j-1) = 0.0_prec
+          ej(j) = 1.0_prec
+          hij = 0.5_prec * (d2fscalar(fsd, ei + ej, qcmplx) -    &
+               Hmat(i,i) - Hmat(j,j))  
+
+          Hmat(i,j) = hij
+          Hmat(j,i) = hij
        end do
+       ei(i) = 0.0_prec
     end do
   end function Hessian
 
