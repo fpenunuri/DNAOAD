@@ -34,5 +34,8 @@ For further details, see **Section 4** of the article:
 
 📎 [https://doi.org/10.48550/arXiv.2501.04159](https://doi.org/10.48550/arXiv.2501.04159)
 
+## 🔗 Related repository
+
+See also: [DNAOAD-FPM](https://github.com/fpenunuri/DNAOAD-FPM), which provides an implementation compatible with the Fortran Package Manager (FPM).
 
 
