@@ -86,5 +86,5 @@ program main
   GV = gradient(fstest,q(1:3))
   do i=1,3
      write(*,*) GV(i)
-  end do   
+  end do 
 end program main

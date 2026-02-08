@@ -1,4 +1,4 @@
-!gfortran -I../LibDualzn128 -o ExDO ex3.f90 -L../LibDualzn128 -ldualzn
+!gfortran -I../LibDualzn128 -o e3 ex3.f90 -L../LibDualzn128 -ldualzn
 
 !module with example of functions
 module function_mod
@@ -86,5 +86,5 @@ program main
   GV = gradient(fstest,q(1:3))
   do i=1,3
      write(*,*) GV(i)
-  end do   
+  end do 
 end program main

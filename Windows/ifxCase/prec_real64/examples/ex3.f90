@@ -1,4 +1,4 @@
-!ifx -I../LibDualzn64 -o e3 ex3.f90 -L../LibDualzn64 -ldualzn
+!ifx -I../LibDualzn64 -o e3 ex3.f90 -L../LibDualzn64 -ldualzn 
 
 !module with example of functions
 module function_mod
@@ -86,5 +86,5 @@ program main
   GV = gradient(fstest,q(1:3))
   do i=1,3
      write(*,*) GV(i)
-  end do   
+  end do 
 end program main
